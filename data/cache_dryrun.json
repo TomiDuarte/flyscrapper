@@ -1,0 +1,14 @@
+{
+  "ASU-FRA|2027-03-01": {"precio": 1480.0, "nivel_precio": "typical"},
+  "ASU-FRA|2027-03-10": {"precio": 1420.0, "nivel_precio": "low"},
+  "ASU-MAD|2027-03-01": {"precio": 1390.0, "nivel_precio": "typical"},
+  "ASU-MAD|2027-03-10": {"precio": 1355.0, "nivel_precio": "typical"},
+  "EZE-FRA|2027-03-01": {"precio": 1210.0, "nivel_precio": "low"},
+  "EZE-FRA|2027-03-10": {"precio": 1290.0, "nivel_precio": "typical"},
+  "EZE-MAD|2027-03-01": {"precio": 1150.0, "nivel_precio": "low"},
+  "EZE-MAD|2027-03-10": {"precio": 1175.0, "nivel_precio": "typical"},
+  "IGU-FRA|2027-03-01": {"precio": 1560.0, "nivel_precio": "high"},
+  "IGU-FRA|2027-03-10": {"precio": 1495.0, "nivel_precio": "typical"},
+  "IGU-MAD|2027-03-01": {"precio": 1440.0, "nivel_precio": "typical"},
+  "IGU-MAD|2027-03-10": {"precio": 1399.0, "nivel_precio": "typical"}
+}

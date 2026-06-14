@@ -1,0 +1,67 @@
+name: Flight Price Tracker
+
+# Se dispara SOLO por cron y manualmente. NUNCA por push (evita loops, ya que el
+# job hace commit de la base actualizada).
+on:
+  schedule:
+    - cron: "0 11 * * *"   # 11:00 UTC (~08:00 ART)
+    - cron: "0 23 * * *"   # 23:00 UTC (~20:00 ART)
+  workflow_dispatch: {}     # ejecución manual desde la pestaña Actions
+
+# Necesario para que el GITHUB_TOKEN integrado pueda commitear/pushear la base.
+permissions:
+  contents: write
+
+# Evita que dos corridas (cron + manual) se pisen al pushear la DB.
+concurrency:
+  group: flight-tracker
+  cancel-in-progress: false
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Instalar navegador de Playwright (fetch_mode=local)
+        run: python -m playwright install --with-deps chromium
+
+      - name: Ejecutar tracker (una barrida)
+        env:
+          FETCH_MODE: local
+          CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
+          CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+        run: python main.py
+
+      - name: Commitear y pushear la base SQLite actualizada
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A data/
+
+          # Si no cambió nada, no hay nada que commitear.
+          if git diff --cached --quiet; then
+            echo "Sin cambios en la base; nada que pushear."
+            exit 0
+          fi
+
+          git commit -m "chore: actualiza precios de vuelos [skip ci]"
+
+          # Reintegrar posibles cambios remotos antes de pushear (--autostash por
+          # si el commit no cubrió algún archivo) y luego push con el token integrado.
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

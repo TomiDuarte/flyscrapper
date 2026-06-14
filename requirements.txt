@@ -1,0 +1,13 @@
+# Fuente principal de precios (API clásica: FlightData / get_flights / fetch_mode).
+# Pineada a 2.2 a propósito: la 3.0 (jun-2026) migró a create_query y rompe la interfaz.
+fast-flights==2.2
+
+# Navegador headless para fetch_mode="local" (el más robusto en CI).
+# Requiere además: python -m playwright install --with-deps chromium
+playwright>=1.40
+
+# Cliente HTTP para SerpApi (fallback) y CallMeBot (alertas).
+requests>=2.31
+
+# Carga de .env en desarrollo local (opcional en runtime).
+python-dotenv>=1.0

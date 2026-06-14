@@ -1,0 +1,13 @@
+# Secrets locales
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Nota: data/precios.db SÍ se versiona (lo commitea el workflow para
+# mantener el histórico entre corridas). No lo ignoramos.
